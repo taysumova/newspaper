@@ -1,34 +1,19 @@
 <template>
   <div id="app">
     <h1>Vue News</h1>
-    <section class="callout secondary">
-      <h5 class="text-center">Filter by Category</h5>
-      <form>
-        <div class="row">
-          <div class="large-6 columns">
-            <select v-model="section">
-              <option v-for="section in sections" :value="section">{{ section }}</option>
-            </select>
-          </div>
-          <div class="medium-6 columns">
-            <a @click="getPosts(section)" class="button expanded">Retrieve</a>
-          </div>
-        </div>
-      </form>
-    </section>
     <!--<img src="./assets/logo.png">-->
+    <FilterForm :getPosts="getPosts" />
     <NewsList :results="results" />
   </div>
 </template>
 
 <script>
 import axios from 'axios'
-import NewsList from './NewsList'
+import NewsList from './components/NewsList'
+import FilterForm from './components/FilterForm'
 
 const NYTBaseUrl = "https://api.nytimes.com/svc/topstories/v2/";
 const ApiKey = "rO1Elou8Lw3AtxdM1wfRMGbiTC6KaAAO";
-
-const SECTIONS = "home, arts, automobiles, books, business, fashion, food, health, insider, magazine, movies, national, nyregion, obituaries, opinion, politics, realestate, science, sports, sundayreview, technology, theater, tmagazine, travel, upshot, world"; // From NYTimes
 
 function buildUrl (url) {
     return NYTBaseUrl + url + ".json?api-key=" + ApiKey
@@ -36,12 +21,13 @@ function buildUrl (url) {
 
 export default {
   name: 'app',
-  components: { NewsList },
+  components: {
+      NewsList,
+      FilterForm
+  },
   data () {
     return {
-        results: [],
-        sections: SECTIONS.split(', '), // create an array of the sections
-        section: 'home' // set default section to 'home'
+        results: []
     }
   },
   mounted() {
